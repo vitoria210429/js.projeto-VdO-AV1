@@ -1,3 +1,39 @@
-h1 {
-  color: rgb(0, 0, 0);
+body {
+  margin: 0;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-image: url("https://static1.cbrimages.com/wordpress/wp-content/uploads/2021/06/satoru-gojo-funny.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  font-family: Arial, sans-serif;
+}
+
+/* bloco central */
+.container {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+/* erro */
+#erro {
+  color: red;
+}
+
+/* lista */
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  margin-top: 10px;
 }

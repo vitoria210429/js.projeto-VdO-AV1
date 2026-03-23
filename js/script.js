@@ -3,62 +3,82 @@ const input = document.querySelector("#mensagem");
 const erro = document.querySelector("#erro");
 const listaMensagens = document.querySelector("#lista");
 
-//"Banco de dados" em memória (array)
 let mensagens = [];
 
-let editandoIndex = null;
-
+// validação
 function validarTexto(texto) {
   const txt = texto.trim();
 
-  if (txt === "") {
-    return "Digite algo antes de enviar";
-  }
-
-  if (txt.length < 3) {
-    return "Mínimo de 3 caracteres";
-  }
+  if (txt === "") return "Digite algo antes de enviar";
+  if (txt.length < 3) return "Mínimo de 3 caracteres";
 
   return "";
 }
 
-//Renderizando/mostrando a lista na tela
+// renderizar lista
 function render() {
   listaMensagens.innerHTML = "";
 
-  //<li> para cada mensagem
   for (let i = 0; i < mensagens.length; i++) {
     const li = document.createElement("li");
 
     const span = document.createElement("span");
     span.textContent = mensagens[i];
 
-    span.addEventListener("click", () => {
-      input.value = mensagens[indexAtual];
-      input.focus();
-      editandoIndex = indexAtual;
+    const indexAtual = i;
 
-      erro.textContent =
-        "Editando item " + (indexAtual + 1) + " (envie para salvar)";
+    // 🔥 BOTÃO EDITAR
+    const btnEditar = document.createElement("button");
+    btnEditar.textContent = "Editar";
+    btnEditar.type = "button";
+
+    btnEditar.addEventListener("click", () => {
+      const inputEdit = document.createElement("input");
+      inputEdit.type = "text";
+      inputEdit.value = mensagens[indexAtual];
+
+      li.replaceChild(inputEdit, span);
+      inputEdit.focus();
+
+      // salvar com ENTER
+      inputEdit.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") salvar();
+      });
+
+      // salvar ao sair
+      inputEdit.addEventListener("blur", salvar);
+
+      function salvar() {
+        const novoTexto = inputEdit.value.trim();
+
+        if (novoTexto === "") {
+          erro.textContent = "Texto não pode ser vazio";
+          render();
+          return;
+        }
+
+        mensagens[indexAtual] = novoTexto;
+        erro.textContent = "";
+        render();
+      }
     });
 
+    // 🔥 BOTÃO EXCLUIR
     const btnExcluir = document.createElement("button");
-    btnExcluir.type = "button";
     btnExcluir.textContent = "Excluir";
-
-    const indexAtual = i;
+    btnExcluir.type = "button";
 
     btnExcluir.addEventListener("click", () => {
       mensagens.splice(indexAtual, 1);
-      console.log(indexAtual);
       render();
     });
 
-    li.append(span, " ", btnExcluir);
+    li.append(span, " ", btnEditar, " ", btnExcluir);
     listaMensagens.append(li);
   }
 }
 
+// adicionar tarefa
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -72,30 +92,10 @@ form.addEventListener("submit", (event) => {
 
   erro.textContent = "";
 
-  const textoFinal = textoDigitado.trim();
-
-  if (editandoIndex !== null) {
-    mensagens[editandoIndex] = textoFinal;
-    editandoIndex = null;
-  } else {
-    mensagens.push(textoDigitado.trim());
-  }
+  mensagens.push(textoDigitado.trim());
 
   render();
 
   input.value = "";
   input.focus();
 });
-
-//exemplo de função
-function falar() {
-  alert("Olá! Eu sou um botão com Javascript");
-  console.log("O botão foi clicado");
-  console.log("Meu time me estressa toda semana");
-}
-
-//ligando botão com a função
-// Se precisar reutilizar a função falar futuramente, deixamos a função definida acima.
-// A ligação ao botão 'btnFala' foi removida porque o botão foi excluído do HTML.
-//const botao2 = document.getElementById("btnFala2");
-//botao2.addEventListener("click", falar);
